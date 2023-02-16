@@ -1,4 +1,4 @@
-defmodule Refactor.Stack do
+defmodule Refactor.StackSimple do
   def new(stack \\ []), do: stack
 
   def push(stack, new_item), do: [new_item | stack]

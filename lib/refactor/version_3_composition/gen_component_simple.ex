@@ -1,4 +1,4 @@
-defmodule Refactor.GenComponent do
+defmodule Refactor.GenComponentSimple do
   def ok(state), do: {:ok, state}
 
   def ok_continue(state, continue), do: {:ok, state, {:continue, continue}}
@@ -12,7 +12,7 @@ defmodule Refactor.GenComponent do
   defmacro __using__(opts \\ []) do
     quote location: :keep, bind_quoted: [opts: opts] do
       use GenServer
-      import Refactor.GenComponent
+      import Refactor.GenComponentSimple
 
       @__component_name__ opts[:name] || __MODULE__
 

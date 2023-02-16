@@ -1,7 +1,7 @@
-defmodule Refactor.StackServer do
-  use Refactor.GenComponent, state: [0]
+defmodule Refactor.StackServerSimple do
+  use Refactor.GenComponentSimple, state: [0]
   require Logger
-  alias Refactor.Stack
+  alias Refactor.StackSimple
 
   def push(new_item), do: cast(:push, new_item)
 
@@ -11,17 +11,17 @@ defmodule Refactor.StackServer do
 
   @impl true
   def handle_call(:pop, _from, state) do
-    state |> Stack.pop() |> reply()
+    state |> StackSimple.pop() |> reply()
   end
 
   @impl true
   def handle_cast({:push, new_item}, state) do
-    state |> Stack.push(new_item) |> noreply()
+    state |> StackSimple.push(new_item) |> noreply()
   end
 
   @impl true
   def handle_info(:clear, _state) do
-    noreply(Stack.new())
+    noreply(StackSimple.new())
   end
 
   # INIT
@@ -35,7 +35,7 @@ defmodule Refactor.StackServer do
 
   @impl true
   def handle_continue(:load, state) do
-    state |> Stack.load() |> noreply()
+    state |> StackSimple.load() |> noreply()
   end
 
   @impl true
