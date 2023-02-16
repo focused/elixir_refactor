@@ -3,24 +3,24 @@ defmodule Refactor.StackServer do
   require Logger
   alias Refactor.Stack
 
-  on_call pop(stack) do
-    Stack.pop(stack)
+  on_call pop do
+    Stack.pop(state)
   end
 
-  on_cast push(new_item, stack) do
-    Stack.push(stack, new_item)
+  on_cast push(new_item) do
+    Stack.push(state, new_item)
   end
 
-  on_info clear(_stack) do
+  on_info clear do
     Stack.new()
   end
 
-  on_continue load(stack) do
-    Stack.load(stack)
+  on_continue load do
+    Stack.load(state)
   end
 
   @impl GenServer
-  def terminate(reason, _stack) do
+  def terminate(reason, _state) do
     Logger.info("Terminating with reason: #{inspect(reason)}")
   end
 end

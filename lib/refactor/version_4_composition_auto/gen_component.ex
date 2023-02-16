@@ -11,12 +11,10 @@ defmodule Refactor.GenComponent do
   def noreply(new_state), do: {:noreply, new_state}
 
   defmacro on_call(fn_with_args, do: body) do
-    {name, _, all_args} = fn_with_args
-    [state_arg | rest_args] = Enum.reverse(all_args)
-    args = Enum.reverse(rest_args)
+    {name, _, args} = fn_with_args
 
     client_request =
-      if args != [] do
+      if args do
         quote do
           {unquote(name), unquote_splicing(args)}
         end
@@ -27,7 +25,7 @@ defmodule Refactor.GenComponent do
       end
 
     server_request =
-      if args != [] do
+      if args do
         quote do
           {unquote(name), var!(unquote_splicing(args))}
         end
@@ -37,17 +35,27 @@ defmodule Refactor.GenComponent do
         end
       end
 
-    quote location: :keep do
-      def unquote(name)(unquote_splicing(args)) do
-        GenServer.call(@__gen_component_name__, unquote(client_request))
+    client_def =
+      if args do
+        quote do
+          def unquote(name)(unquote_splicing(args)) do
+            GenServer.call(@__gen_component_name__, unquote(client_request))
+          end
+        end
+      else
+        quote do
+          def unquote(name)() do
+            GenServer.call(@__gen_component_name__, unquote(client_request))
+          end
+        end
       end
 
+    quote location: :keep do
+      unquote(client_def)
+
       @impl GenServer
-      def handle_call(
-            unquote(server_request),
-            _from,
-            var!(unquote(state_arg))
-          ) do
+      def handle_call(unquote(server_request), _from, var!(state)) do
+        var!(state)
         {response, new_state} = unquote(body)
         {:reply, response, new_state}
       end
@@ -55,12 +63,10 @@ defmodule Refactor.GenComponent do
   end
 
   defmacro on_cast(fn_with_args, do: body) do
-    {name, _, all_args} = fn_with_args
-    [state_arg | rest_args] = Enum.reverse(all_args)
-    args = Enum.reverse(rest_args)
+    {name, _, args} = fn_with_args
 
     client_request =
-      if args != [] do
+      if args do
         quote do
           {unquote(name), unquote_splicing(args)}
         end
@@ -71,7 +77,7 @@ defmodule Refactor.GenComponent do
       end
 
     server_request =
-      if args != [] do
+      if args do
         quote do
           {unquote(name), var!(unquote_splicing(args))}
         end
@@ -81,26 +87,37 @@ defmodule Refactor.GenComponent do
         end
       end
 
-    quote location: :keep do
-      def unquote(name)(unquote_splicing(args)) do
-        GenServer.cast(@__gen_component_name__, unquote(client_request))
+    client_def =
+      if args do
+        quote do
+          def unquote(name)(unquote_splicing(args)) do
+            GenServer.cast(@__gen_component_name__, unquote(client_request))
+          end
+        end
+      else
+        quote do
+          def unquote(name)() do
+            GenServer.cast(@__gen_component_name__, unquote(client_request))
+          end
+        end
       end
 
+    quote location: :keep do
+      unquote(client_def)
+
       @impl GenServer
-      def handle_cast(unquote(server_request), var!(unquote(state_arg))) do
-        new_state = unquote(body)
-        {:noreply, new_state}
+      def handle_cast(unquote(server_request), var!(state)) do
+        var!(state)
+        {:noreply, unquote(body)}
       end
     end
   end
 
   defmacro on_info(fn_with_args, do: body) do
-    {name, _, all_args} = fn_with_args
-    [state_arg | rest_args] = Enum.reverse(all_args)
-    args = Enum.reverse(rest_args)
+    {name, _, args} = fn_with_args
 
     server_request =
-      if args != [] do
+      if args do
         quote do
           {unquote(name), var!(unquote_splicing(args))}
         end
@@ -111,7 +128,7 @@ defmodule Refactor.GenComponent do
       end
 
     client_request =
-      if args != [] do
+      if args do
         quote do
           {unquote(name), unquote_splicing(args)}
         end
@@ -121,25 +138,37 @@ defmodule Refactor.GenComponent do
         end
       end
 
-    quote location: :keep do
-      def unquote(name)(unquote_splicing(args)) do
-        send(@__gen_component_name__, unquote(client_request))
+    client_def =
+      if args do
+        quote do
+          def unquote(name)(unquote_splicing(args)) do
+            send(@__gen_component_name__, unquote(client_request))
+          end
+        end
+      else
+        quote do
+          def unquote(name)() do
+            send(@__gen_component_name__, unquote(client_request))
+          end
+        end
       end
 
+    quote location: :keep do
+      unquote(client_def)
+
       @impl GenServer
-      def handle_info(unquote(server_request), var!(unquote(state_arg))) do
+      def handle_info(unquote(server_request), var!(state)) do
+        var!(state)
         {:noreply, unquote(body)}
       end
     end
   end
 
   defmacro on_continue(fn_with_args, do: body) do
-    {name, _, all_args} = fn_with_args
-    [state_arg | rest_args] = Enum.reverse(all_args)
-    args = Enum.reverse(rest_args)
+    {name, _, args} = fn_with_args
 
     server_request =
-      if args != [] do
+      if args do
         quote do
           {unquote(name), var!(unquote_splicing(args))}
         end
@@ -150,12 +179,8 @@ defmodule Refactor.GenComponent do
       end
 
     quote location: :keep do
-      def unquote(name)(unquote_splicing(args)) do
-        send(@__gen_component_name__, {unquote(name), unquote_splicing(args)})
-      end
-
       @impl GenServer
-      def handle_continue(unquote(server_request), var!(unquote(state_arg))) do
+      def handle_continue(unquote(server_request), var!(state)) do
         {:noreply, unquote(body)}
       end
     end
