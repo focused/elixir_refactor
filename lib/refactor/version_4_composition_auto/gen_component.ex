@@ -59,13 +59,35 @@ defmodule Refactor.GenComponent do
     [state_arg | rest_args] = Enum.reverse(all_args)
     args = Enum.reverse(rest_args)
 
+    client_request =
+      if args != [] do
+        quote do
+          {unquote(name), unquote_splicing(args)}
+        end
+      else
+        quote do
+          unquote(name)
+        end
+      end
+
+    server_request =
+      if args != [] do
+        quote do
+          {unquote(name), var!(unquote_splicing(args))}
+        end
+      else
+        quote do
+          unquote(name)
+        end
+      end
+
     quote location: :keep do
       def unquote(name)(unquote_splicing(args)) do
-        GenServer.cast(@__gen_component_name__, {unquote(name), unquote_splicing(args)})
+        GenServer.cast(@__gen_component_name__, unquote(client_request))
       end
 
       @impl GenServer
-      def handle_cast({unquote(name), var!(unquote_splicing(args))}, var!(unquote(state_arg))) do
+      def handle_cast(unquote(server_request), var!(unquote(state_arg))) do
         new_state = unquote(body)
         {:noreply, new_state}
       end
