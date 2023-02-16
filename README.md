@@ -10,5 +10,5 @@ Dave Thomas:
 
 Architecting GenServers for Testability:
 - https://www.youtube.com/watch?app=desktop&v=EZFLPG7V7RM
-
+- https://github.com/s3cur3/genserver_architecture
 

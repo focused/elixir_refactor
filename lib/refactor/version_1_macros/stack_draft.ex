@@ -10,6 +10,10 @@ defmodule Refactor.StackDraft do
     {hd(state), tl(state)}
   end
 
+  # defcall pop([item | tail]) do
+  #   {item, tail}
+  # end
+
   # state_name: :stack
   #
   # defcall pop do
