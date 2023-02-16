@@ -1,21 +1,14 @@
 # Refactor
 
-**TODO: Add description**
+**Refactor experiments with GenServer**
 
-## Installation
+## Resources
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `refactor` to your list of dependencies in `mix.exs`:
+Dave Thomas:
+- https://youtu.be/6U7cLUygMeI?t=726
+- https://github.com/pragdave/component
 
-```elixir
-def deps do
-  [
-    {:refactor, "~> 0.1.0"}
-  ]
-end
-```
+Architecting GenServers for Testability:
+- https://www.youtube.com/watch?app=desktop&v=EZFLPG7V7RM
 
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at <https://hexdocs.pm/refactor>.
 
