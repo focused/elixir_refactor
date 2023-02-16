@@ -1,7 +1,5 @@
 defmodule Refactor.StackTest do
   use ExUnit.Case
-
-  # alias Refactor.Stack
   alias Refactor.StackServer
 
   describe "push/1" do
