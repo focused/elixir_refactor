@@ -1,4 +1,4 @@
-defmodule Refactor.StackServer do
+defmodule Refactor.StackServerAuto do
   use Refactor.GenComponent, state: [0], init: :load
   require Logger
   alias Refactor.Stack
