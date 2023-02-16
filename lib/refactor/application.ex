@@ -12,7 +12,7 @@ defmodule Refactor.Application do
       # {Refactor.Worker, arg}
       Refactor.StackOriginal,
       Refactor.StackDraft,
-      {Refactor.ComponentServer, {Refactor.Stack.new([0]), Refactor.StackServer}}
+      {Refactor.ComponentServer, {Refactor.StackComponent.new([0]), Refactor.CompStackServer}}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

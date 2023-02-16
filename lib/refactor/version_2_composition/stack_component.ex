@@ -1,10 +1,10 @@
-defmodule Refactor.Stack do
-  use Refactor.Component, server: Refactor.StackServer
+defmodule Refactor.StackComponent do
+  use Refactor.Component, server: Refactor.CompStackServer
   alias __MODULE__
 
   defstruct items: []
 
-  def new(items), do: %Stack{items: items}
+  def new(items), do: %StackComponent{items: items}
 
   def push(item), do: gen_cast({:push, item})
 
@@ -13,12 +13,12 @@ defmodule Refactor.Stack do
   def clear, do: gen_info(:clear)
 
   @impl true
-  def call(%Stack{items: items}, _from, :pop) do
+  def call(%StackComponent{items: items}, _from, :pop) do
     {hd(items), items |> tl() |> new()}
   end
 
   @impl true
-  def cast(%Stack{items: items}, {:push, item}) do
+  def cast(%StackComponent{items: items}, {:push, item}) do
     new([item | items])
   end
 
@@ -28,7 +28,7 @@ defmodule Refactor.Stack do
   end
 
   @impl true
-  def load(%Stack{items: items}) do
+  def load(%StackComponent{items: items}) do
     new(items ++ [-1])
   end
 end
