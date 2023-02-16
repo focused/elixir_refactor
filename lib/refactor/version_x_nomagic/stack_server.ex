@@ -3,13 +3,12 @@ defmodule Refactor.StackServer do
 
   require Logger
 
-  import Refactor.Server
+  import Refactor.Reply
 
-  alias Refactor.Server
   alias Refactor.StackClient
   alias Refactor.StackImpl
 
-  def start_link(state), do: Server.start_link(__MODULE__, state)
+  def start_link(state), do: Refactor.Server.start_link(__MODULE__, state)
 
   defdelegate push(new_item), to: StackClient
   defdelegate pop(), to: StackClient
