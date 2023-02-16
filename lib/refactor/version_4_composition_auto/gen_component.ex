@@ -150,10 +150,6 @@ defmodule Refactor.GenComponent do
       end
 
     quote location: :keep do
-      def unquote(name)(unquote_splicing(args)) do
-        send(@__gen_component_name__, {unquote(name), unquote_splicing(args)})
-      end
-
       @impl GenServer
       def handle_continue(unquote(server_request), var!(unquote(state_arg))) do
         {:noreply, unquote(body)}
