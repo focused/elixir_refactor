@@ -12,28 +12,8 @@ defmodule Refactor.GenComponent do
 
   defmacro on_call(fn_with_args, do: body) do
     {name, _, args} = fn_with_args
-
-    client_request =
-      if args do
-        quote do
-          {unquote(name), unquote_splicing(args)}
-        end
-      else
-        quote do
-          unquote(name)
-        end
-      end
-
-    server_request =
-      if args do
-        quote do
-          {unquote(name), var!(unquote_splicing(args))}
-        end
-      else
-        quote do
-          unquote(name)
-        end
-      end
+    client_request = get_client_request(name, args)
+    server_request = get_server_request(name, args)
 
     client_def =
       if args do
@@ -64,28 +44,8 @@ defmodule Refactor.GenComponent do
 
   defmacro on_cast(fn_with_args, do: body) do
     {name, _, args} = fn_with_args
-
-    client_request =
-      if args do
-        quote do
-          {unquote(name), unquote_splicing(args)}
-        end
-      else
-        quote do
-          unquote(name)
-        end
-      end
-
-    server_request =
-      if args do
-        quote do
-          {unquote(name), var!(unquote_splicing(args))}
-        end
-      else
-        quote do
-          unquote(name)
-        end
-      end
+    client_request = get_client_request(name, args)
+    server_request = get_server_request(name, args)
 
     client_def =
       if args do
@@ -115,28 +75,8 @@ defmodule Refactor.GenComponent do
 
   defmacro on_info(fn_with_args, do: body) do
     {name, _, args} = fn_with_args
-
-    server_request =
-      if args do
-        quote do
-          {unquote(name), var!(unquote_splicing(args))}
-        end
-      else
-        quote do
-          unquote(name)
-        end
-      end
-
-    client_request =
-      if args do
-        quote do
-          {unquote(name), unquote_splicing(args)}
-        end
-      else
-        quote do
-          unquote(name)
-        end
-      end
+    client_request = get_client_request(name, args)
+    server_request = get_server_request(name, args)
 
     client_def =
       if args do
@@ -166,17 +106,7 @@ defmodule Refactor.GenComponent do
 
   defmacro on_continue(fn_with_args, do: body) do
     {name, _, args} = fn_with_args
-
-    server_request =
-      if args do
-        quote do
-          {unquote(name), var!(unquote_splicing(args))}
-        end
-      else
-        quote do
-          unquote(name)
-        end
-      end
+    server_request = get_server_request(name, args)
 
     quote location: :keep do
       @impl GenServer
@@ -215,6 +145,32 @@ defmodule Refactor.GenComponent do
       def info(event, data \\ nil)
       def info(event, nil), do: send(@__gen_component_name__, event)
       def info(event, data), do: send(@__gen_component_name__, {event, data})
+    end
+  end
+
+  defp get_client_request(name, args) do
+    if args do
+      quote do
+        {unquote(name), unquote_splicing(args)}
+      end
+    else
+      quote do
+        unquote(name)
+      end
+    end
+  end
+
+  defp get_server_request(name, args) do
+    case args do
+      [_ | _] ->
+        quote do
+          {unquote(name), var!(unquote_splicing(args))}
+        end
+
+      _ ->
+        quote do
+          unquote(name)
+        end
     end
   end
 end
