@@ -14,6 +14,7 @@ defmodule Refactor.Application do
       Refactor.StackDraft,
       {Refactor.ComponentServer, {Refactor.StackComponent.new([0]), Refactor.CompStackServer}},
       Refactor.StackServerSimple,
+      Refactor.StackServerAuto,
       Refactor.StackServer
     ]
 
