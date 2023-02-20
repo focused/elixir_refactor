@@ -1,6 +1,6 @@
-defmodule Refactor.Stack do
+defmodule Refactor.Stack.Implementation do
   @moduledoc """
-  Stack implementation.
+  Stack business logic implementation (core logic).
   """
 
   @type t :: [member]

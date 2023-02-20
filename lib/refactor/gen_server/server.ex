@@ -1,4 +1,8 @@
-defmodule Refactor.Server do
+defmodule Refactor.GenServer.Server do
+  @moduledoc """
+  Helper for GenServer functions.
+  """
+
   @type t :: any
 
   @spec start_link(module, t, keyword) :: GenServer.on_start()

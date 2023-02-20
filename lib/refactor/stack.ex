@@ -1,6 +1,10 @@
-defmodule Refactor.NomagicStack do
-  alias Refactor.NomagicStack.Client
-  alias Refactor.NomagicStack.Server
+defmodule Refactor.Stack do
+  @moduledoc """
+  Stack public API.
+  """
+
+  alias Refactor.Stack.Client
+  alias Refactor.Stack.Server
 
   defdelegate push(new_item), to: Client
   defdelegate pop(), to: Client

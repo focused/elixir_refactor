@@ -10,12 +10,7 @@ defmodule Refactor.Application do
     children = [
       # Starts a worker by calling: Refactor.Worker.start_link(arg)
       # {Refactor.Worker, arg}
-      Refactor.StackOriginal,
-      Refactor.StackDraft,
-      {Refactor.ComponentServer, {Refactor.StackComponent.new([0]), Refactor.CompStackServer}},
-      Refactor.StackServerSimple,
-      Refactor.StackServerAuto,
-      Refactor.StackServer
+      Refactor.Stack
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
